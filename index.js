@@ -21,23 +21,39 @@ var nms = new NodeMediaServer(config)
 
 
 const { live } = new PrismaClient;
-app.get("/get-live-stream-list", async (req, res) => {
-    await live.findFirst({
+
+app.get("/get-live-stream-list", (req, res, next) => {
+     const apiKey = req.headers.apikey
+     if (apiKey === "GETBAK@WC2022") {
+          next();
+     } else {
+          const resData = {
+               meta: {
+                    success: false,
+                    message: "Required Api Key",
+                    devMessage: ""
+               },
+               body: null
+          }
+          res.status(401).json(resData)
+     }
+}, async (req, res) => {
+     await live.findFirst({
           where: {
                status: "active"
           }
      })
-     .then((data)=>{
-          const resData = {
-               meta:{
-                    success:true,
-                    message:"Fetch Success!",
-                    devMessage:""
-               },
-               body:data
-          }
-          res.json(resData);
-     })
+          .then((data) => {
+               const resData = {
+                    meta: {
+                         success: true,
+                         message: "Fetch Success!",
+                         devMessage: ""
+                    },
+                    body: data
+               }
+               res.json(resData);
+          })
 });
 
 
