@@ -21,7 +21,7 @@ var nms = new NodeMediaServer(config)
 
 
 const { live } = new PrismaClient
-app.get("/", async (req, res) => {
+app.get("/get-live-stream-list", async (req, res) => {
      const list = await live.findFirst({
           where: {
                status: "active"
