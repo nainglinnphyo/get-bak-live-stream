@@ -20,14 +20,24 @@ const config = {
 var nms = new NodeMediaServer(config)
 
 
-const { live } = new PrismaClient
+const { live } = new PrismaClient;
 app.get("/get-live-stream-list", async (req, res) => {
-     const list = await live.findFirst({
+    await live.findFirst({
           where: {
                status: "active"
           }
      })
-     res.json(list);
+     .then((data)=>{
+          const resData = {
+               meta:{
+                    success:true,
+                    message:"Fetch Success!",
+                    devMessage:""
+               },
+               body:data
+          }
+          res.json(resData);
+     })
 });
 
 
